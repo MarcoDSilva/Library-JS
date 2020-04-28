@@ -1,12 +1,12 @@
 //needed variables
 const myLibrary = [];
-const bookTitle = document.querySelector('#bookName').value;
-const bookAuthor = document.querySelector('#bookAuthor').value;
-const bookPages = document.querySelector('#bookPages').value;
-const bookRead = document.querySelector('#bookRead').value;
-const btnAddBook = document.querySelector('#btnAddBook');
-const tableRow = document.querySelector('#table-rows');
-const bookForm = document.querySelector('#newBook-form');
+let bookTitle = document.querySelector('#bookName').value;
+let bookAuthor = document.querySelector('#bookAuthor').value;
+let bookPages = document.querySelector('#bookPages').value;
+let bookRead = document.querySelector('#bookRead').value;
+let btnAddBook = document.querySelector('#btnAddBook');
+let tableRow = document.querySelector('#table-rows');
+let bookForm = document.querySelector('#newBook-form');
 
 btnAddBook.addEventListener('click', pushBook);
 
@@ -36,6 +36,14 @@ function addBookToLibrary(title, author, numPages, read) {
 
 //calls the function that will push the new book to the library
 function pushBook() {
+    bookTitle = document.querySelector('#bookName').value;
+    bookAuthor = document.querySelector('#bookAuthor').value;
+    bookPages = document.querySelector('#bookPages').value;
+    bookRead = document.querySelector('#bookRead').value;
+    btnAddBook = document.querySelector('#btnAddBook');
+    tableRow = document.querySelector('#table-rows');
+    bookForm = document.querySelector('#newBook-form');
+
     if (bookRead === true) {
         addBookToLibrary(bookTitle, bookAuthor, bookPages, "Yes");
     } else {
@@ -58,11 +66,12 @@ function render() {
 
         tableRow.appendChild(trBook);
     }
+    resetForm()
 }
 
 function resetForm() {
-    bookTitle.value = "";
-    bookPages.value = "";
+    bookTitle.value = "teste";
+    bookPages.value = "teste";
     bookRead.value = false;
-    bookAuthor.value = "";
+    bookAuthor.value = "teste";
 }
