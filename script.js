@@ -11,19 +11,18 @@ let bookForm = document.querySelector('#newBook-form');
 btnAddBook.addEventListener('click', pushBook);
 
 //BOOK constructor
-function Book(title, author, numPages, read) {
-    this.title = title;
-    this.author = author;
-    this.numPages = numPages;
-    this.read = read;
-    isRead = () => {
-        if (this.read === false) {
-            this.read = true;
-        } else {
-            this.read = false;
-        }
+class Book {
+    constructor(title, author, numPages, read) {
+        this.title = title;
+        this.author = author;
+        this.numPages = numPages;
+        this.read = read;
     }
 }
+
+Book.prototype.isRead = () => {
+    this.read = !this.read
+};
 
 //pushes the new book to library and renders the updated view
 function addBookToLibrary(title, author, numPages, read) {
@@ -41,12 +40,15 @@ function pushBook() {
     tableRow = document.querySelector('#table-rows');
     bookForm = document.querySelector('#newBook-form');
 
-    addBookToLibrary(bookTitle, bookAuthor, bookPages, bookRead);
-
+    if (bookTitle === '' || bookAuthor === '' || bookPages === '') {
+        alert('fields need to be all filled!');
+    } else {
+        addBookToLibrary(bookTitle, bookAuthor, bookPages, bookRead);
+    }
 }
 
 //renders the table division view required to show the info
-function render() {    
+function render() {
     createTableHeaders(tableRow);
 
     for (let i = 0; i < myLibrary.length; i++) {
@@ -59,13 +61,9 @@ function render() {
         let btnBookRead = document.createElement('button');
 
         btnRemove.innerText = 'Delete Book';
-        btnRemove.setAttribute('data-set', `${myLibrary.indexOf(myLibrary[i])}`);
-        btnRemove.addEventListener('click', function() {
-            let index = myLibrary.indexOf(this);
-            myLibrary.slice(index,1);
-            render()
-        });
-
+        btnRemove.setAttribute('data-index', `${myLibrary.indexOf(myLibrary[i])}`);
+        btnRemove.addEventListener('click', deleteBook);
+        
         btnBookRead.addEventListener('click', myLibrary[i].isRead);
         btnBookRead.innerText = myLibrary[i].read;
 
@@ -78,7 +76,7 @@ function render() {
 
         trBook.appendChild(tdRead);
         trBook.appendChild(tdBtn);
-        tableRow.appendChild(trBook);                
+        tableRow.appendChild(trBook);
     }
 }
 
@@ -90,11 +88,17 @@ function createTableHeaders(tr) {
     tr.innerHTML = null;
 
     let tableHeaders = document.createElement('tr');
-    const headers = ['Title','Author','Pages','Read','Delete'];
+    const headers = ['Title', 'Author', 'Pages', 'Read', 'Delete'];
 
-    for(let h in headers) {
-         tableHeaders.innerHTML += `<th>${headers[h]}</th>`;
+    for (let h in headers) {
+        tableHeaders.innerHTML += `<th>${headers[h]}</th>`;
     }
 
     tr.appendChild(tableHeaders);
+}
+
+function deleteBook() {
+    let index = this.getAttribute('data-index');
+    myLibrary.splice(index, 1);
+    render()
 }
