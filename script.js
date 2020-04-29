@@ -17,12 +17,11 @@ class Book {
         this.author = author;
         this.numPages = numPages;
         this.read = read;
+    }    
+    isRead = () => {
+       this.read = !this.read;
     }
 }
-
-Book.prototype.isRead = () => {
-    this.read = !this.read
-};
 
 //pushes the new book to library and renders the updated view
 function addBookToLibrary(title, author, numPages, read) {
@@ -41,7 +40,7 @@ function pushBook() {
     bookForm = document.querySelector('#newBook-form');
 
     if (bookTitle === '' || bookAuthor === '' || bookPages === '') {
-        alert('fields need to be all filled!');
+        alert('Please fill all fields.');
     } else {
         addBookToLibrary(bookTitle, bookAuthor, bookPages, bookRead);
     }
@@ -64,7 +63,11 @@ function render() {
         btnRemove.setAttribute('data-index', `${myLibrary.indexOf(myLibrary[i])}`);
         btnRemove.addEventListener('click', deleteBook);
         
-        btnBookRead.addEventListener('click', myLibrary[i].isRead);
+        btnBookRead.addEventListener('click', function() {
+            myLibrary[i].isRead()
+            render();
+        });
+
         btnBookRead.innerText = myLibrary[i].read;
 
         tdBtn.appendChild(btnRemove);
@@ -78,6 +81,7 @@ function render() {
         trBook.appendChild(tdBtn);
         tableRow.appendChild(trBook);
     }
+    resetForm();
 }
 
 function resetForm() {
