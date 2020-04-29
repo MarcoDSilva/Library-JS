@@ -3,29 +3,26 @@ const myLibrary = [];
 let bookTitle = document.querySelector('#bookName').value;
 let bookAuthor = document.querySelector('#bookAuthor').value;
 let bookPages = document.querySelector('#bookPages').value;
-let bookRead = document.querySelector('#bookRead').value;
+let bookRead = document.querySelector('#bookRead').checked;
 let btnAddBook = document.querySelector('#btnAddBook');
 let tableRow = document.querySelector('#table-rows');
 let bookForm = document.querySelector('#newBook-form');
 
 btnAddBook.addEventListener('click', pushBook);
 
-myLibrary.push(new Book('Lord of The Rings', 'JKK Tolkien', '1250', 'Yes'));
-myLibrary.push(new Book('Battle of the middle earth', 'JKK Tolkien', '1333', 'No'));
-
 //BOOK constructor
 function Book(title, author, numPages, read) {
-    this.title = title,
-    this.author = author,
-    this.numPages = numPages,
-    this.read = read,
-    this.info = () => {
-        if (read === true) {
-            return `${title} by ${author}, ${numPages} pages, already read`;
+    this.title = title;
+    this.author = author;
+    this.numPages = numPages;
+    this.read = read;
+    isRead = () => {
+        if (this.read === false) {
+            this.read = true;
         } else {
-            return `${title} by ${author}, ${numPages} pages, not read yet`;
+            this.read = false;
         }
-    };
+    }
 }
 
 //pushes the new book to library and renders the updated view
@@ -39,39 +36,65 @@ function pushBook() {
     bookTitle = document.querySelector('#bookName').value;
     bookAuthor = document.querySelector('#bookAuthor').value;
     bookPages = document.querySelector('#bookPages').value;
-    bookRead = document.querySelector('#bookRead').value;
+    bookRead = document.querySelector('#bookRead').checked;
     btnAddBook = document.querySelector('#btnAddBook');
     tableRow = document.querySelector('#table-rows');
     bookForm = document.querySelector('#newBook-form');
 
-    if (bookRead === true) {
-        addBookToLibrary(bookTitle, bookAuthor, bookPages, "Yes");
-    } else {
-        addBookToLibrary(bookTitle, bookAuthor, bookPages, "No");
-    }
+    addBookToLibrary(bookTitle, bookAuthor, bookPages, bookRead);
+
 }
 
 //renders the table division view required to show the info
-function render() {
-    tableRow.innerHTML = null;
+function render() {    
+    createTableHeaders(tableRow);
 
-    for (let i = 0; i < myLibrary.length; i++) 
-    {
+    for (let i = 0; i < myLibrary.length; i++) {
+
         let trBook = document.createElement('tr');
+        let tdRead = document.createElement('td');
+        let tdBtn = document.createElement('td');
+
+        let btnRemove = document.createElement('button');
+        let btnBookRead = document.createElement('button');
+
+        btnRemove.innerText = 'Delete Book';
+        btnRemove.setAttribute('data-set', `${myLibrary.indexOf(myLibrary[i])}`);
+        btnRemove.addEventListener('click', function() {
+            let index = myLibrary.indexOf(this);
+            myLibrary.slice(index,1);
+            render()
+        });
+
+        btnBookRead.addEventListener('click', myLibrary[i].isRead);
+        btnBookRead.innerText = myLibrary[i].read;
+
+        tdBtn.appendChild(btnRemove);
+        tdRead.appendChild(btnBookRead);
 
         trBook.innerHTML = `<td>${myLibrary[i].title}</td>
                             <td>${myLibrary[i].author}</td>
-                            <td>${myLibrary[i].numPages}</td>
-                            <td>${myLibrary[i].read}</td>`;
+                            <td>${myLibrary[i].numPages}</td>`;
 
-        tableRow.appendChild(trBook);
+        trBook.appendChild(tdRead);
+        trBook.appendChild(tdBtn);
+        tableRow.appendChild(trBook);                
     }
-    resetForm()
 }
 
 function resetForm() {
-    bookTitle.value = "teste";
-    bookPages.value = "teste";
-    bookRead.value = false;
-    bookAuthor.value = "teste";
+    bookForm.reset();
+}
+
+function createTableHeaders(tr) {
+    tr.innerHTML = null;
+
+    let tableHeaders = document.createElement('tr');
+    const headers = ['Title','Author','Pages','Read','Delete'];
+
+    for(let h in headers) {
+         tableHeaders.innerHTML += `<th>${headers[h]}</th>`;
+    }
+
+    tr.appendChild(tableHeaders);
 }
