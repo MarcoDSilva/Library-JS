@@ -11,13 +11,12 @@ let bookForm = document.querySelector('#newBook-form');
 btnAddBook.addEventListener('click', pushBook);
 
 //BOOK constructor
-class Book {
-    constructor(title, author, numPages, read) {
-        this.title = title;
-        this.author = author;
-        this.numPages = numPages;
-        this.read = read;
-    }
+function Book(title, author, numPages, read) {
+    this.title = title;
+    this.author = author;
+    this.numPages = numPages;
+    this.read = read;
+
 }
 
 //pushes the new book to library and renders the updated view
