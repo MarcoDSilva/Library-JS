@@ -1,5 +1,5 @@
 //needed variables
-const myLibrary = [];
+let myLibrary = [];
 let bookTitle = document.querySelector('#bookName').value;
 let bookAuthor = document.querySelector('#bookAuthor').value;
 let bookPages = document.querySelector('#bookPages').value;
@@ -17,15 +17,16 @@ class Book {
         this.author = author;
         this.numPages = numPages;
         this.read = read;
-    }    
+    }
     isRead = () => {
-       this.read = !this.read;
+        this.read = !this.read;
     }
 }
 
 //pushes the new book to library and renders the updated view
 function addBookToLibrary(title, author, numPages, read) {
     myLibrary.push(new Book(title, author, numPages, read));
+    setLocalStorage();
     render();
 }
 
@@ -35,9 +36,6 @@ function pushBook() {
     bookAuthor = document.querySelector('#bookAuthor').value;
     bookPages = document.querySelector('#bookPages').value;
     bookRead = document.querySelector('#bookRead').checked;
-    btnAddBook = document.querySelector('#btnAddBook');
-    tableRow = document.querySelector('#table-rows');
-    bookForm = document.querySelector('#newBook-form');
 
     if (bookTitle === '' || bookAuthor === '' || bookPages === '') {
         alert('Please fill all fields.');
@@ -48,7 +46,14 @@ function pushBook() {
 
 //renders the table division view required to show the info
 function render() {
+
+    //checking localStorage
+    if (!localStorage.getItem('library')) {
+        setLocalStorage();
+    }
+
     createTableHeaders(tableRow);
+    getLocalStorage();
 
     for (let i = 0; i < myLibrary.length; i++) {
 
@@ -62,8 +67,8 @@ function render() {
         btnRemove.innerText = 'Delete Book';
         btnRemove.setAttribute('data-index', `${myLibrary.indexOf(myLibrary[i])}`);
         btnRemove.addEventListener('click', deleteBook);
-        
-        btnBookRead.addEventListener('click', function() {
+
+        btnBookRead.addEventListener('click', function () {
             myLibrary[i].isRead()
             render();
         });
@@ -84,10 +89,12 @@ function render() {
     resetForm();
 }
 
+//resets the formulary after the book is added to the array
 function resetForm() {
     bookForm.reset();
 }
 
+//creates the headers to be used on the table
 function createTableHeaders(tr) {
     tr.innerHTML = null;
 
@@ -101,8 +108,21 @@ function createTableHeaders(tr) {
     tr.appendChild(tableHeaders);
 }
 
+//deletes the book and updates the localStorage
 function deleteBook() {
     let index = this.getAttribute('data-index');
     myLibrary.splice(index, 1);
+    setLocalStorage();
     render()
 }
+
+//setting the localStorage 
+function setLocalStorage() {
+    localStorage.setItem('library', JSON.stringify(myLibrary));
+}
+
+function getLocalStorage() {
+    myLibrary = JSON.parse(localStorage.getItem('library'));
+}
+
+render();
