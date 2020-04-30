@@ -17,11 +17,12 @@ function Book(title, author, numPages, read) {
     this.numPages = numPages;
     this.read = read;
 
+    Book.prototype.isRead = function () {
+        this.read = !this.read;
+        return;
+    };
 }
-Book.prototype.isRead = function () {
-    this.read = !this.read;
-    return;
-};
+
 
 //pushes the new book to library and renders the updated view
 function addBookToLibrary(title, author, numPages, read) {
@@ -55,8 +56,6 @@ function render() {
 
     createTableHeaders(tableRow);
     getLocalStorage();
-
-
 
     for (let i = 0; i < myLibrary.length; i++) {
 
