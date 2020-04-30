@@ -18,9 +18,6 @@ class Book {
         this.numPages = numPages;
         this.read = read;
     }
-    isRead = () => {
-        this.read = !this.read;
-    }
 }
 
 //pushes the new book to library and renders the updated view
@@ -44,6 +41,7 @@ function pushBook() {
     }
 }
 
+
 //renders the table division view required to show the info
 function render() {
 
@@ -54,6 +52,10 @@ function render() {
 
     createTableHeaders(tableRow);
     getLocalStorage();
+
+    Book.prototype.isRead = function() {
+        this.read = !this.read;
+    }
 
     for (let i = 0; i < myLibrary.length; i++) {
 
@@ -69,7 +71,7 @@ function render() {
         btnRemove.addEventListener('click', deleteBook);
 
         btnBookRead.addEventListener('click', function () {
-            myLibrary[i].isRead()
+            myLibrary[i].isRead;
             render();
         });
 
